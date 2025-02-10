@@ -1,14 +1,16 @@
-from flask import Flask, render_template, request, redirect, url_for
-from flask_sqlalchemy import SQLAlchemy 
-import mysql.connector
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+import secrets
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://DavidToledo:Nathanael@localhost/Biblioteca'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False 
-app.config['SECRET_KEY'] = 'tu_clave_secreta' 
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://david:D@v1d2024!@localhost/Biblioteca'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-db = SQLAlchemy(app)  
+secret_key = secrets.token_hex(16)
+app.config['SECRET_KEY'] = secret_key
+
+db = SQLAlchemy(app)
 
 class Estudiante(db.Model):
     __tablename__ = 'Estudiante'
