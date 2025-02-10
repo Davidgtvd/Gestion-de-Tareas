@@ -1,36 +1,37 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Lista de Multas</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
-    <h1>💰 Lista de Multas</h1>
-    <a href="{{ url_for('index') }}">🏠 Volver al Inicio</a>
-    <a href="{{ url_for('crear_multa') }}">➕ Crear Multa</a>
-    <table border="1">
-        <tr>
-            <th>ID Multa</th>
-            <th>Fecha Emisión</th>
-            <th>Monto</th>
-            <th>Estado</th>
-            <th>Acciones</th>
-        </tr>
-        {% for multa in multas %}
-        <tr>
-            <td>{{ multa.idMulta }}</td>
-            <td>{{ multa.fechaEmision }}</td>
-            <td>${{ multa.monto }}</td>
-            <td>{{ multa.estado }}</td>
-            <td>
-                <a href="{{ url_for('editar_multa', id=multa.idMulta) }}">✏️ Editar</a>
-                <form action="{{ url_for('eliminar_multa', id=multa.idMulta) }}" method="POST" style="display:inline;">
-                    <button type="submit">🗑️ Eliminar</button>
-                </form>
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block title %}Crear Tarea{% endblock %}
+
+{% block content %}
+    <h1>Crear Tarea</h1>
+
+    <form method="POST">
+        <label for="titulo">Título:</label>
+        <input type="text" id="titulo" name="titulo" required>
+
+        <label for="descripcion">Descripción:</label>
+        <textarea id="descripcion" name="descripcion"></textarea>
+
+        <label for="fecha_asignacion">Fecha de Asignación:</label>
+        <input type="date" id="fecha_asignacion" name="fecha_asignacion">
+
+        <label for="fecha_entrega">Fecha de Entrega:</label>
+        <input type="date" id="fecha_entrega" name="fecha_entrega">
+
+        <label for="estado">Estado:</label>
+        <select id="estado" name="estado">
+            <option value="Pendiente">Pendiente</option>
+            <option value="En progreso">En progreso</option>
+            <option value="Completada">Completada</option>
+        </select>
+
+        <label for="id_curso">Curso:</label>
+        <select id="id_curso" name="id_curso">
+            {% for curso in cursos %}
+                <option value="{{ curso.id_curso }}">{{ curso.nombre_curso }}</option>
+            {% endfor %}
+        </select>
+
+        <button type="submit">Guardar</button>
+    </form>
+{% endblock %}

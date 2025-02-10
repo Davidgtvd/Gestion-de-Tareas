@@ -1,23 +1,26 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Crear Multa</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
-    <h1>➕ Crear Multa</h1>
-    <a href="{{ url_for('listar_multas') }}">🔙 Volver a la Lista</a>
+{% extends 'base.html' %}
+
+{% block title %}Editar Estudiante{% endblock %}
+
+{% block content %}
+    <h1>Editar Estudiante</h1>
+
     <form method="POST">
-        <label for="fecha_emision">Fecha de Emisión:</label>
-        <input type="date" id="fecha_emision" name="fecha_emision" required><br><br>
-        <label for="monto">Monto:</label>
-        <input type="number" step="0.01" id="monto" name="monto" required><br><br>
-        <label for="estado">Estado:</label>
-        <input type="text" id="estado" name="estado" required><br><br>
-        <label for="id_usuario">ID Usuario:</label>
-        <input type="number" id="id_usuario" name="id_usuario" required><br><br>
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" value="{{ estudiante.nombre }}" required>
+
+        <label for="apellido">Apellido:</label>
+        <input type="text" id="apellido" name="apellido" value="{{ estudiante.apellido }}" required>
+
+        <label for="correo">Correo:</label>
+        <input type="email" id="correo" name="correo" value="{{ estudiante.correo }}">
+
+        <label for="telefono">Teléfono:</label>
+        <input type="tel" id="telefono" name="telefono" value="{{ estudiante.telefono }}">
+
+        <label for="fecha_nacimiento">Fecha de Nacimiento:</label>
+        <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" value="{{ estudiante.fecha_nacimiento }}">
+
         <button type="submit">Guardar</button>
     </form>
-</body>
-</html>
+{% endblock %}

@@ -1,36 +1,31 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Lista de Usuarios</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
-    <h1>👥 Lista de Usuarios</h1>
-    <a href="{{ url_for('index') }}">🏠 Volver al Inicio</a>
-    <a href="{{ url_for('crear_usuario') }}">➕ Crear Usuario</a>
-    <table border="1">
-        <tr>
-            <th>ID</th>
-            <th>Nombres</th>
-            <th>Apellidos</th>
-            <th>Dirección</th>
-            <th>Acciones</th>
-        </tr>
-        {% for usuario in usuarios %}
-        <tr>
-            <td>{{ usuario.id_usuario }}</td>
-            <td>{{ usuario.nombres }}</td>
-            <td>{{ usuario.apellidos }}</td>
-            <td>{{ usuario.direccion }}</td>
-            <td>
-                <a href="{{ url_for('editar_usuario', id=usuario.id_usuario) }}">✏️ Editar</a>
-                <form action="{{ url_for('eliminar_usuario', id=usuario.id_usuario) }}" method="POST" style="display:inline;">
-                    <button type="submit">🗑️ Eliminar</button>
-                </form>
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block title %}Crear Inscripción{% endblock %}
+
+{% block content %}
+  <h1>Crear Inscripción</h1>
+
+  <form method="POST">
+    <label for="fecha_inscripcion">Fecha de Inscripción:</label>
+    <input type="date" id="fecha_inscripcion" name="fecha_inscripcion" required>
+
+    <label for="id_estudiante">Estudiante:</label>
+    <select id="id_estudiante" name="id_estudiante">
+      {% for estudiante in estudiantes %}
+      <option value="{{ estudiante.id_estudiante }}">{{ estudiante.nombre }} {{ estudiante.apellido }}</option>
+      {% endfor %}
+    </select>
+
+    <label for="id_curso">Curso:</label>
+    <select id="id_curso" name="id_curso">
+      {% for curso in cursos %}
+      <option value="{{ curso.id_curso }}">{{ curso.nombre_curso }}</option>
+      {% endfor %}
+    </select>
+
+    <label for="calificacion">Calificación:</label>
+    <input type="number" id="calificacion" name="calificacion" step="0.01" min="0" max="10">
+
+    <button type="submit">Guardar</button>
+  </form>
+{% endblock %}

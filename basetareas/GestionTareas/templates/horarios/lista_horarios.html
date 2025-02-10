@@ -1,33 +1,35 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Préstamos Vencidos</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
-    <div class="container">
-        <h1>⏳ Préstamos Vencidos</h1>
-        <a href="{{ url_for('consultas') }}">🔙 Volver a Consultas</a>
-        <table>
-            <tr>
-                <th>ID Préstamo</th>
-                <th>Nombres</th>
-                <th>Apellidos</th>
-                <th>Fecha Préstamo</th>
-                <th>Fecha Devolución</th>
-            </tr>
-            {% for prestamo in prestamos %}
-            <tr>
-                <td>{{ prestamo.idPrestamo }}</td>
-                <td>{{ prestamo.nombres }}</td>
-                <td>{{ prestamo.apellidos }}</td>
-                <td>{{ prestamo.fecha_Prestamo }}</td>
-                <td>{{ prestamo.fecha_Devolucion }}</td>
-            </tr>
-            {% endfor %}
-        </table>
-    </div>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block title %}Lista de Horarios{% endblock %}
+
+{% block content %}
+  <h1>Lista de Horarios</h1>
+
+  <a href="{{ url_for('crear_horario') }}" class="btn btn-primary">Crear Nuevo Horario</a>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Hora Inicio</th>
+        <th>Hora Fin</th>
+        <th>Día</th>
+        <th>Curso</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for horario in horarios %}
+      <tr>
+        <td>{{ horario.id_horario }}</td>
+        <td>{{ horario.hora_inicio }}</td>
+        <td>{{ horario.hora_fin }}</td>
+        <td>{{ horario.dia }}</td>
+        <td>{{ horario.curso.nombre_curso }}</td>
+        <td class="acciones">
+          </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

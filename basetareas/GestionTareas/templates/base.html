@@ -3,31 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Préstamos Vencidos</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>{% block title %}Mi Aplicación{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
+    <nav>
+        <ul class="menu">
+            <li><a href="{{ url_for('index') }}">Inicio</a></li>
+            <li><a href="{{ url_for('listar_estudiantes') }}">Estudiantes</a></li>
+            <li><a href="{{ url_for('listar_cursos') }}">Cursos</a></li>
+            <li><a href="{{ url_for('listar_usuarios') }}">Usuarios</a></li>
+            <!-- Agrega aquí más enlaces a otras entidades -->
+        </ul>
+    </nav>
+
     <div class="container">
-        <h1>⏳ Préstamos Vencidos</h1>
-        <a href="{{ url_for('consultas') }}">🔙 Volver a Consultas</a>
-        <table>
-            <tr>
-                <th>ID Préstamo</th>
-                <th>Nombres</th>
-                <th>Apellidos</th>
-                <th>Fecha Préstamo</th>
-                <th>Fecha Devolución</th>
-            </tr>
-            {% for prestamo in prestamos %}
-            <tr>
-                <td>{{ prestamo.idPrestamo }}</td>
-                <td>{{ prestamo.nombres }}</td>
-                <td>{{ prestamo.apellidos }}</td>
-                <td>{{ prestamo.fecha_Prestamo }}</td>
-                <td>{{ prestamo.fecha_Devolucion }}</td>
-            </tr>
-            {% endfor %}
-        </table>
+        {% block content %}{% endblock %}
     </div>
+
+    <footer class="footer">
+        <p>© {{ year }} Mi Aplicación</p>
+    </footer>
 </body>
 </html>

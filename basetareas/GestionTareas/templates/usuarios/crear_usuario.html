@@ -1,21 +1,24 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Crear Usuario</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
-    <h1>➕ Crear Usuario</h1>
-    <a href="{{ url_for('listar_usuarios') }}">🔙 Volver a la Lista</a>
-    <form method="POST">
-        <label for="nombres">Nombres:</label>
-        <input type="text" id="nombres" name="nombres" required><br><br>
-        <label for="apellidos">Apellidos:</label>
-        <input type="text" id="apellidos" name="apellidos" required><br><br>
-        <label for="direccion">Dirección:</label>
-        <input type="text" id="direccion" name="direccion" required><br><br>
-        <button type="submit">Guardar</button>
-    </form>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block title %}Crear Usuario{% endblock %}
+
+{% block content %}
+  <h1>Crear Usuario</h1>
+
+  <form method="POST">
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" required>
+
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required>
+
+    <label for="id_rol">Rol:</label>
+    <select id="id_rol" name="id_rol">
+      {% for rol in roles %}
+      <option value="{{ rol.id_rol }}">{{ rol.nombre }}</option>
+      {% endfor %}
+    </select>
+
+    <button type="submit">Guardar</button>
+  </form>
+{% endblock %}

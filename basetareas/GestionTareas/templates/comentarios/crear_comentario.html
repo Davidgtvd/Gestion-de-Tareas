@@ -1,31 +1,31 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Usuarios con Multas Pendientes</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
-    <div class="container">
-        <h1>💰 Usuarios con Multas Pendientes</h1>
-        <a href="{{ url_for('consultas') }}">🔙 Volver a Consultas</a>
-        <table>
-            <tr>
-                <th>ID Usuario</th>
-                <th>Nombres</th>
-                <th>Apellidos</th>
-                <th>Monto</th>
-            </tr>
-            {% for usuario in usuarios %}
-            <tr>
-                <td>{{ usuario.id_usuario }}</td>
-                <td>{{ usuario.nombres }}</td>
-                <td>{{ usuario.apellidos }}</td>
-                <td>${{ usuario.monto }}</td>
-            </tr>
-            {% endfor %}
-        </table>
-    </div>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block title %}Crear Comentario{% endblock %}
+
+{% block content %}
+  <h1>Crear Comentario</h1>
+
+  <form method="POST">
+    <label for="contenido">Contenido:</label>
+    <textarea id="contenido" name="contenido" required></textarea>
+
+    <label for="fecha_creacion">Fecha de Creación:</label>
+    <input type="datetime-local" id="fecha_creacion" name="fecha_creacion">
+
+    <label for="id_tarea">Tarea:</label>
+    <select id="id_tarea" name="id_tarea">
+      {% for tarea in tareas %}
+      <option value="{{ tarea.id_tarea }}">{{ tarea.titulo }}</option>
+      {% endfor %}
+    </select>
+
+    <label for="id_estudiante">Estudiante:</label>
+    <select id="id_estudiante" name="id_estudiante">
+      {% for estudiante in estudiantes %}
+      <option value="{{ estudiante.id_estudiante }}">{{ estudiante.nombre }} {{ estudiante.apellido }}</option>
+      {% endfor %}
+    </select>
+
+    <button type="submit">Guardar</button>
+  </form>
+{% endblock %}

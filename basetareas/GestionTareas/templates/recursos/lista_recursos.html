@@ -1,33 +1,35 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Préstamos Vencidos</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
-    <div class="container">
-        <h1>⏳ Préstamos Vencidos</h1>
-        <a href="{{ url_for('consultas') }}">🔙 Volver a Consultas</a>
-        <table>
-            <tr>
-                <th>ID Préstamo</th>
-                <th>Nombres</th>
-                <th>Apellidos</th>
-                <th>Fecha Préstamo</th>
-                <th>Fecha Devolución</th>
-            </tr>
-            {% for prestamo in prestamos %}
-            <tr>
-                <td>{{ prestamo.idPrestamo }}</td>
-                <td>{{ prestamo.nombres }}</td>
-                <td>{{ prestamo.apellidos }}</td>
-                <td>{{ prestamo.fecha_Prestamo }}</td>
-                <td>{{ prestamo.fecha_Devolucion }}</td>
-            </tr>
-            {% endfor %}
-        </table>
-    </div>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block title %}Lista de Recursos{% endblock %}
+
+{% block content %}
+  <h1>Lista de Recursos</h1>
+
+  <a href="{{ url_for('crear_recurso') }}" class="btn btn-primary">Crear Nuevo Recurso</a>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Tipo</th>
+        <th>URL</th>
+        <th>Descripción</th>
+        <th>Tarea</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for recurso in recursos %}
+      <tr>
+        <td>{{ recurso.id_recurso }}</td>
+        <td>{{ recurso.tipo }}</td>
+        <td><a href="{{ recurso.url }}" target="_blank">{{ recurso.url }}</a></td>
+        <td>{{ recurso.descripcion }}</td>
+        <td>{{ recurso.tarea.titulo }}</td>
+        <td class="acciones">
+          </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

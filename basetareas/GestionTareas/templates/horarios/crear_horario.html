@@ -1,31 +1,35 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Usuarios con Multas Pendientes</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
-    <div class="container">
-        <h1>💰 Usuarios con Multas Pendientes</h1>
-        <a href="{{ url_for('consultas') }}">🔙 Volver a Consultas</a>
-        <table>
-            <tr>
-                <th>ID Usuario</th>
-                <th>Nombres</th>
-                <th>Apellidos</th>
-                <th>Monto</th>
-            </tr>
-            {% for usuario in usuarios %}
-            <tr>
-                <td>{{ usuario.id_usuario }}</td>
-                <td>{{ usuario.nombres }}</td>
-                <td>{{ usuario.apellidos }}</td>
-                <td>${{ usuario.monto }}</td>
-            </tr>
-            {% endfor %}
-        </table>
-    </div>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block title %}Crear Horario{% endblock %}
+
+{% block content %}
+  <h1>Crear Horario</h1>
+
+  <form method="POST">
+    <label for="hora_inicio">Hora Inicio:</label>
+    <input type="time" id="hora_inicio" name="hora_inicio" required>
+
+    <label for="hora_fin">Hora Fin:</label>
+    <input type="time" id="hora_fin" name="hora_fin" required>
+
+    <label for="dia">Día:</label>
+    <select id="dia" name="dia">
+      <option value="Lunes">Lunes</option>
+      <option value="Martes">Martes</option>
+      <option value="Miércoles">Miércoles</option>
+      <option value="Jueves">Jueves</option>
+      <option value="Viernes">Viernes</option>
+      <option value="Sábado">Sábado</option>
+      <option value="Domingo">Domingo</option>
+    </select>
+
+    <label for="id_curso">Curso:</label>
+    <select id="id_curso" name="id_curso">
+      {% for curso in cursos %}
+      <option value="{{ curso.id_curso }}">{{ curso.nombre_curso }}</option>
+      {% endfor %}
+    </select>
+
+    <button type="submit">Guardar</button>
+  </form>
+{% endblock %}

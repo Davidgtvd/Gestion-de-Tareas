@@ -1,33 +1,35 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Préstamos Vencidos</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
-    <div class="container">
-        <h1>⏳ Préstamos Vencidos</h1>
-        <a href="{{ url_for('consultas') }}">🔙 Volver a Consultas</a>
-        <table>
-            <tr>
-                <th>ID Préstamo</th>
-                <th>Nombres</th>
-                <th>Apellidos</th>
-                <th>Fecha Préstamo</th>
-                <th>Fecha Devolución</th>
-            </tr>
-            {% for prestamo in prestamos %}
-            <tr>
-                <td>{{ prestamo.idPrestamo }}</td>
-                <td>{{ prestamo.nombres }}</td>
-                <td>{{ prestamo.apellidos }}</td>
-                <td>{{ prestamo.fecha_Prestamo }}</td>
-                <td>{{ prestamo.fecha_Devolucion }}</td>
-            </tr>
-            {% endfor %}
-        </table>
-    </div>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block title %}Lista de Comentarios{% endblock %}
+
+{% block content %}
+  <h1>Lista de Comentarios</h1>
+
+  <a href="{{ url_for('crear_comentario') }}" class="btn btn-primary">Crear Nuevo Comentario</a>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Contenido</th>
+        <th>Fecha de Creación</th>
+        <th>Tarea</th>
+        <th>Estudiante</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for comentario in comentarios %}
+      <tr>
+        <td>{{ comentario.id_comentario }}</td>
+        <td>{{ comentario.contenido }}</td>
+        <td>{{ comentario.fecha_creacion }}</td>
+        <td>{{ comentario.tarea.titulo }}</td>
+        <td>{{ comentario.estudiante.nombre }} {{ comentario.estudiante.apellido }}</td>
+        <td class="acciones">
+          </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

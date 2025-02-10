@@ -1,21 +1,35 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Crear Préstamo de Libro</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
-    <h1>➕ Crear Préstamo de Libro</h1>
-    <a href="{{ url_for('listar_prestamo_libro') }}">🔙 Volver a la Lista</a>
-    <form method="POST">
-        <label for="id_prestamo">ID Préstamo:</label>
-        <input type="number" id="id_prestamo" name="id_prestamo" required><br><br>
-        <label for="isbn">ISBN:</label>
-        <input type="text" id="isbn" name="isbn" required><br><br>
-        <label for="cantidad">Cantidad:</label>
-        <input type="number" id="cantidad" name="cantidad" required><br><br>
-        <button type="submit">Guardar</button>
-    </form>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block title %}Lista de Usuarios{% endblock %}
+
+{% block content %}
+  <h1>Lista de Usuarios</h1>
+
+  <a href="{{ url_for('crear_usuario') }}" class="btn btn-primary">Crear Nuevo Usuario</a>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Username</th>
+        <th>Rol</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for usuario in usuarios %}
+      <tr>
+        <td>{{ usuario.id_usuario }}</td>
+        <td>{{ usuario.username }}</td>
+        <td>{{ usuario.rol.nombre }}</td>
+        <td class="acciones">
+          <a href="{{ url_for('editar_usuario', id_usuario=usuario.id_usuario) }}" class="btn btn-edit">Editar</a>
+          <form action="{{ url_for('eliminar_usuario', id_usuario=usuario.id_usuario) }}" method="POST">
+            <button type="submit" class="btn btn-delete">Eliminar</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

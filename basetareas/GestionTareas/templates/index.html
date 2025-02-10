@@ -1,24 +1,24 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Biblioteca</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
-    <div class="container">
-        <h1>Bienvenido al Sistema de Biblioteca</h1>
-        <ul class="menu">
-            <li><a href="{{ url_for('listar_libros') }}">📚 Ver Libros Disponibles</a></li>
-            <li><a href="{{ url_for('listar_usuarios') }}">👤 Gestionar Usuarios</a></li>
-            <li><a href="{{ url_for('listar_prestamos') }}">📋 Gestionar Préstamos</a></li>
-            <li><a href="{{ url_for('listar_multas') }}">📨 Gestionar Multas</a></li>
-            <li><a href="{{ url_for('consultas') }}">🔍 Consultas Especiales</a></li>
-        </ul>
-    </div>
-    <div class="footer">
-        <p>Sistema de Biblioteca &copy; 2024</p>
-    </div>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block title %}Inicio{% endblock %}
+
+{% block content %}
+    <h1>Bienvenido al Sistema de Gestión Académica</h1>
+
+    <p>Seleccione una opción del menú para comenzar:</p>
+
+    <ul class="menu">
+        <li><a href="{{ url_for('listar_estudiantes') }}">Estudiantes</a></li>
+        <li><a href="{{ url_for('listar_usuarios') }}">Usuarios</a></li>
+        <li><a href="{{ url_for('listar_cursos') }}">Cursos</a></li>
+        <li><a href="{{ url_for('listar_profesores') }}">Profesores</a></li>
+        <li><a href="{{ url_for('listar_tareas') }}">Tareas</a></li>
+        <li><a href="{{ url_for('listar_inscripciones') }}">Inscripciones</a></li>
+        <li><a href="{{ url_for('listar_comentarios') }}">Comentarios</a></li>
+        <li><a href="{{ url_for('listar_recursos') }}">Recursos</a></li>
+        <li><a href="{{ url_for('listar_horarios') }}">Horarios</a></li>
+        <li><a href="{{ url_for('listar_notificaciones') }}">Notificaciones</a></li>
+        <li><a href="{{ url_for('listar_roles') }}">Roles</a></li>
+        <li><a href="{{ url_for('listar_curso_profesores') }}">Curso-Profesores</a></li>
+    </ul>
+{% endblock %}
