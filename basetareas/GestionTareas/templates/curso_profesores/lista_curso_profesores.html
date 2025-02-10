@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}Lista de Asignaciones Curso-Profesor{% endblock %}
+
+{% block content %}
+    <h1>Lista de Asignaciones Curso-Profesor</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Curso</th>
+                <th>Profesor</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for asignacion in curso_profesores %}
+                <tr>
+                    <td>{{ asignacion.id_curso_profesor }}</td>
+                    <td>{{ asignacion.curso.nombre_curso }}</td>
+                    <td>{{ asignacion.profesor.nombre }} {{ asignacion.profesor.apellido }}</td>
+                    <td class="acciones">
+                        
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
