@@ -1,39 +1,14 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crear Préstamo</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
-    <div class="container">
-        <h1>➕ Crear Préstamo</h1>
-        <a href="{{ url_for('listar_prestamos') }}">🔙 Volver a la Lista</a>
-        <form method="POST">
-            <label for="fecha_prestamo">Fecha de Préstamo:</label>
-            <input type="date" id="fecha_prestamo" name="fecha_prestamo" required><br><br>
+{% extends 'base.html' %}
 
-            <label for="fecha_devolucion">Fecha de Devolución:</label>
-            <input type="date" id="fecha_devolucion" name="fecha_devolucion" required><br><br>
+{% block title %}Detalle del Estudiante{% endblock %}
 
-            <label for="estado">Estado:</label>
-            <input type="text" id="estado" name="estado" value="activo" required><br><br>
+{% block content %}
+    <h1>Detalle del Estudiante</h1>
 
-            <label for="id_bibliotecario">ID Bibliotecario:</label>
-            <input type="number" id="id_bibliotecario" name="id_bibliotecario" required><br><br>
-
-            <label for="id_usuario">ID Usuario:</label>
-            <input type="number" id="id_usuario" name="id_usuario" required><br><br>
-
-            <label for="isbn">ISBN del Libro:</label>
-            <input type="text" id="isbn" name="isbn" required><br><br>
-
-            <label for="cantidad">Cantidad:</label>
-            <input type="number" id="cantidad" name="cantidad" required><br><br>
-
-            <button type="submit">Guardar</button>
-        </form>
-    </div>
-</body>
-</html>
+    <p><strong>ID:</strong> {{ estudiante.id_estudiante }}</p>
+    <p><strong>Nombre:</strong> {{ estudiante.nombre }}</p>
+    <p><strong>Apellido:</strong> {{ estudiante.apellido }}</p>
+    <p><strong>Correo:</strong> {{ estudiante.correo }}</p>
+    <p><strong>Teléfono:</strong> {{ estudiante.telefono }}</p>
+    <p><strong>Fecha de Nacimiento:</strong> {{ estudiante.fecha_nacimiento }}</p>
+{% endblock %}
