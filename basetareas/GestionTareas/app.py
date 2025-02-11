@@ -1,14 +1,22 @@
-from flask import Flask
+from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 import secrets
+import mysql.connector
+from sqlalchemy import create_engine
+from datetime import datetime
+import bcrypt
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://david:D@v1d2024!@localhost/Biblioteca'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db_user = 'david'
+db_password = 'D@v1d2024!'
+db_host = 'localhost'
+db_name = 'Biblioteca'
+db_uri = f'mysql+mysqlconnector://{db_user}:{db_password}@{db_host}/{db_name}?charset=utf8mb4'
 
-secret_key = secrets.token_hex(16)
-app.config['SECRET_KEY'] = secret_key
+app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SECRET_KEY'] = secrets.token_hex(16)
 
 db = SQLAlchemy(app)
 
@@ -20,26 +28,36 @@ class Estudiante(db.Model):
     correo = db.Column(db.String(100))
     telefono = db.Column(db.String(20))
     fecha_nacimiento = db.Column(db.Date)
+    inscripciones = db.relationship('Inscripcion', backref='estudiante', lazy=True)
+    comentarios = db.relationship('Comentario', backref='estudiante', lazy=True)
+    notificaciones = db.relationship('Notificacion', backref='estudiante', lazy=True)
 
     def __repr__(self):
         return f'<Estudiante {self.nombre} {self.apellido}>'
 
 class Usuario(db.Model):
-    __tablename__ = 'Usuario' 
+    __tablename__ = 'Usuario'
     id_usuario = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), nullable=False, unique=True)
-    password = db.Column(db.String(100), nullable=False) 
+    password = db.Column(db.String(100), nullable=False)
     id_rol = db.Column(db.Integer, db.ForeignKey('Rol.id_rol'))
-    rol = db.relationship('Rol', backref=db.backref('usuarios', lazy=True))  # Relación con la tabla Rol
+    rol = db.relationship('Rol', backref='usuarios', lazy=True)
 
     def __repr__(self):
         return f'<Usuario {self.username}>'
+
+    def set_password(self, password):
+        self.password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+
+    def check_password(self, password):
+        return bcrypt.checkpw(password.encode('utf-8'), self.password.encode('utf-8'))
 
 class Rol(db.Model):
     __tablename__ = 'Rol'
     id_rol = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(50), nullable=False)
     descripcion = db.Column(db.String(200))
+    usuarios = db.relationship('Usuario', backref='rol', lazy=True)
 
     def __repr__(self):
         return f'<Rol {self.nombre}>'
@@ -51,6 +69,10 @@ class Curso(db.Model):
     descripcion = db.Column(db.String(200))
     creditos = db.Column(db.Integer)
     semestre = db.Column(db.Integer)
+    tareas = db.relationship('Tarea', backref='curso', lazy=True)
+    inscripciones = db.relationship('Inscripcion', backref='curso', lazy=True)
+    horarios = db.relationship('Horario', backref='curso', lazy=True)
+    curso_profesores = db.relationship('CursoProfesor', backref='curso', lazy=True)
 
     def __repr__(self):
         return f'<Curso {self.nombre_curso}>'
@@ -62,6 +84,7 @@ class Profesor(db.Model):
     apellido = db.Column(db.String(100), nullable=False)
     correo = db.Column(db.String(100))
     telefono = db.Column(db.String(20))
+    curso_profesores = db.relationship('CursoProfesor', backref='profesor', lazy=True)
 
     def __repr__(self):
         return f'<Profesor {self.nombre} {self.apellido}>'
@@ -71,11 +94,12 @@ class Tarea(db.Model):
     id_tarea = db.Column(db.Integer, primary_key=True)
     titulo = db.Column(db.String(100), nullable=False)
     descripcion = db.Column(db.String(200))
-    fecha_asignacion = db.Column(db.Date)
+    fecha_asignacion = db.Column(db.Date, default=datetime.utcnow)
     fecha_entrega = db.Column(db.Date)
-    estado = db.Column(db.String(20))
-    id_curso = db.Column(db.Integer, db.ForeignKey('Curso.id_curso'))
-    curso = db.relationship('Curso', backref=db.backref('tareas', lazy=True))
+    estado = db.Column(db.String(20), default='Pendiente')
+    id_curso = db.Column(db.Integer, db.ForeignKey('Curso.id_curso'), nullable=False)
+    comentarios = db.relationship('Comentario', backref='tarea', lazy=True)
+    recursos = db.relationship('Recurso', backref='tarea', lazy=True)
 
     def __repr__(self):
         return f'<Tarea {self.titulo}>'
@@ -83,11 +107,9 @@ class Tarea(db.Model):
 class Inscripcion(db.Model):
     __tablename__ = 'Inscripcion'
     id_inscripcion = db.Column(db.Integer, primary_key=True)
-    fecha_inscripcion = db.Column(db.Date)
-    id_estudiante = db.Column(db.Integer, db.ForeignKey('Estudiante.id_estudiante'))
-    id_curso = db.Column(db.Integer, db.ForeignKey('Curso.id_curso'))
-    estudiante = db.relationship('Estudiante', backref=db.backref('inscripciones', lazy=True))
-    curso = db.relationship('Curso', backref=db.backref('inscripciones', lazy=True))
+    fecha_inscripcion = db.Column(db.Date, default=datetime.utcnow)
+    id_estudiante = db.Column(db.Integer, db.ForeignKey('Estudiante.id_estudiante'), nullable=False)
+    id_curso = db.Column(db.Integer, db.ForeignKey('Curso.id_curso'), nullable=False)
     calificacion = db.Column(db.Float)
 
     def __repr__(self):
@@ -97,11 +119,9 @@ class Comentario(db.Model):
     __tablename__ = 'Comentario'
     id_comentario = db.Column(db.Integer, primary_key=True)
     contenido = db.Column(db.String(500), nullable=False)
-    fecha_creacion = db.Column(db.DateTime)
-    id_tarea = db.Column(db.Integer, db.ForeignKey('Tarea.id_tarea'))
-    id_estudiante = db.Column(db.Integer, db.ForeignKey('Estudiante.id_estudiante'))
-    tarea = db.relationship('Tarea', backref=db.backref('comentarios', lazy=True))
-    estudiante = db.relationship('Estudiante', backref=db.backref('comentarios', lazy=True))
+    fecha_creacion = db.Column(db.DateTime, default=datetime.utcnow)
+    id_tarea = db.Column(db.Integer, db.ForeignKey('Tarea.id_tarea'), nullable=False)
+    id_estudiante = db.Column(db.Integer, db.ForeignKey('Estudiante.id_estudiante'), nullable=False)
 
     def __repr__(self):
         return f'<Comentario {self.id_comentario}>'
@@ -112,8 +132,7 @@ class Recurso(db.Model):
     tipo = db.Column(db.String(50))
     url = db.Column(db.String(200))
     descripcion = db.Column(db.String(200))
-    id_tarea = db.Column(db.Integer, db.ForeignKey('Tarea.id_tarea'))
-    tarea = db.relationship('Tarea', backref=db.backref('recursos', lazy=True))
+    id_tarea = db.Column(db.Integer, db.ForeignKey('Tarea.id_tarea'), nullable=False)
 
     def __repr__(self):
         return f'<Recurso {self.id_recurso}>'
@@ -124,8 +143,7 @@ class Horario(db.Model):
     hora_inicio = db.Column(db.Time)
     hora_fin = db.Column(db.Time)
     dia = db.Column(db.String(20))
-    id_curso = db.Column(db.Integer, db.ForeignKey('Curso.id_curso'))
-    curso = db.relationship('Curso', backref=db.backref('horarios', lazy=True))
+    id_curso = db.Column(db.Integer, db.ForeignKey('Curso.id_curso'), nullable=False)
 
     def __repr__(self):
         return f'<Horario {self.id_horario}>'
@@ -134,9 +152,8 @@ class Notificacion(db.Model):
     __tablename__ = 'Notificacion'
     id_notificacion = db.Column(db.Integer, primary_key=True)
     mensaje = db.Column(db.String(200), nullable=False)
-    fecha_envio = db.Column(db.DateTime)
-    id_estudiante = db.Column(db.Integer, db.ForeignKey('Estudiante.id_estudiante'))
-    estudiante = db.relationship('Estudiante', backref=db.backref('notificaciones', lazy=True))
+    fecha_envio = db.Column(db.DateTime, default=datetime.utcnow)
+    id_estudiante = db.Column(db.Integer, db.ForeignKey('Estudiante.id_estudiante'), nullable=False)
 
     def __repr__(self):
         return f'<Notificacion {self.id_notificacion}>'
@@ -144,15 +161,12 @@ class Notificacion(db.Model):
 class CursoProfesor(db.Model):
     __tablename__ = 'Curso_Profesor'
     id_curso_profesor = db.Column(db.Integer, primary_key=True)
-    id_curso = db.Column(db.Integer, db.ForeignKey('Curso.id_curso'))
-    id_profesor = db.Column(db.Integer, db.ForeignKey('Profesor.id_profesor'))
-    curso = db.relationship('Curso', backref=db.backref('curso_profesores', lazy=True))
-    profesor = db.relationship('Profesor', backref=db.backref('curso_profesores', lazy=True))
+    id_curso = db.Column(db.Integer, db.ForeignKey('Curso.id_curso'), nullable=False)
+    id_profesor = db.Column(db.Integer, db.ForeignKey('Profesor.id_profesor'), nullable=False)
 
     def __repr__(self):
         return f'<CursoProfesor {self.id_curso_profesor}>'
 
-# Rutas
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -170,22 +184,62 @@ def crear_estudiante():
         correo = request.form["correo"]
         telefono = request.form["telefono"]
         fecha_nacimiento = request.form["fecha_nacimiento"]
-
         nuevo_estudiante = Estudiante(nombre=nombre, apellido=apellido, correo=correo, telefono=telefono, fecha_nacimiento=fecha_nacimiento)
         db.session.add(nuevo_estudiante)
         db.session.commit()
         return redirect(url_for("listar_estudiantes"))
     return render_template("estudiantes/crear_estudiante.html")
 
-# Rutas para Usuarios, Cursos, etc. (adaptadas a los modelos SQLAlchemy)
-
-# Ejemplo de consulta con SQLAlchemy
 @app.route("/cursos")
 def listar_cursos():
     cursos = Curso.query.all()
     return render_template("cursos/lista_cursos.html", cursos=cursos)
 
-# Resto de las rutas (adaptadas a los modelos SQLAlchemy)
+@app.route("/profesores")
+def listar_profesores():
+    profesores = Profesor.query.all()
+    return render_template("profesores/lista_profesores.html", profesores=profesores)
+
+@app.route("/tareas")
+def listar_tareas():
+    tareas = Tarea.query.all()
+    return render_template("tareas/lista_tareas.html", tareas=tareas)
+
+@app.route("/inscripciones")
+def listar_inscripciones():
+    inscripciones = Inscripcion.query.all()
+    return render_template("inscripciones/lista_inscripciones.html", inscripciones=inscripciones)
+
+@app.route("/comentarios")
+def listar_comentarios():
+    comentarios = Comentario.query.all()
+    return render_template("comentarios/lista_comentarios.html", comentarios=comentarios)
+
+@app.route("/recursos")
+def listar_recursos():
+    recursos = Recurso.query.all()
+    return render_template("recursos/lista_recursos.html", recursos=recursos)
+
+@app.route("/horarios")
+def listar_horarios():
+    horarios = Horario.query.all()
+    return render_template("horarios/lista_horarios.html", horarios=horarios)
+
+@app.route("/notificaciones")
+def listar_notificaciones():
+    notificaciones = Notificacion.query.all()
+    return render_template("notificaciones/lista_notificaciones.html", notificaciones=notificaciones)
+
+@app.route("/roles")
+def listar_roles():
+    roles = Rol.query.all()
+    return render_template("roles/lista_roles.html", roles=roles)
+
+@app.route("/curso_profesores")
+def listar_curso_profesores():
+    curso_profesores = CursoProfesor.query.all()
+    return render_template("curso_profesores/lista_curso_profesores.html", curso_profesores=curso_profesores)
+
 @app.route("/usuarios", methods=["GET"])
 def listar_usuarios():
     usuarios = Usuario.query.all()
@@ -195,10 +249,9 @@ def listar_usuarios():
 def crear_usuario():
     if request.method == "POST":
         username = request.form["username"]
-        password = request.form["password"]  # Considera usar hashing
-        id_rol = request.form["id_rol"]
-
-        nuevo_usuario = Usuario(username=username, password=password, id_rol=id_rol)
+        password = request.form["password"]
+        nuevo_usuario = Usuario(username=username)
+        nuevo_usuario.set_password(password)
         db.session.add(nuevo_usuario)
         db.session.commit()
         return redirect(url_for("listar_usuarios"))
@@ -210,7 +263,8 @@ def editar_usuario(id_usuario):
     usuario = Usuario.query.get_or_404(id_usuario)
     if request.method == "POST":
         usuario.username = request.form["username"]
-        usuario.password = request.form["password"]  # Considera usar hashing
+        password = request.form["password"]
+        usuario.set_password(password)
         usuario.id_rol = request.form["id_rol"]
         db.session.commit()
         return redirect(url_for("listar_usuarios"))
@@ -224,8 +278,7 @@ def eliminar_usuario(id_usuario):
     db.session.commit()
     return redirect(url_for("listar_usuarios"))
 
-# Inicio de la aplicación
 if __name__ == "__main__":
     with app.app_context():
-        db.create_all()  # Crea las tablas si no existen
+        db.create_all()
     app.run(debug=True)

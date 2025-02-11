@@ -3,22 +3,126 @@
 {% block title %}Inicio{% endblock %}
 
 {% block content %}
-    <h1>Bienvenido al Sistema de Gestión Académica</h1>
+    <div class="jumbotron text-center">
+        <h1 class="display-4">¡Bienvenido al Sistema de Gestión Académica!</h1>
+        <p class="lead">Seleccione una opción para administrar la información académica:</p>
+    </div>
 
-    <p>Seleccione una opción del menú para comenzar:</p>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-graduation-cap"></i> Estudiantes</h5>
+                    <p class="card-text">Administrar la información de los estudiantes.</p>
+                    <a href="{{ url_for('listar_estudiantes') }}" class="btn btn-primary">Ir a Estudiantes</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-users"></i> Usuarios</h5>
+                    <p class="card-text">Administrar los usuarios del sistema.</p>
+                    <a href="{{ url_for('listar_usuarios') }}" class="btn btn-primary">Ir a Usuarios</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-book"></i> Cursos</h5>
+                    <p class="card-text">Administrar los cursos disponibles.</p>
+                    <a href="{{ url_for('listar_cursos') }}" class="btn btn-primary">Ir a Cursos</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <ul class="menu">
-        <li><a href="{{ url_for('listar_estudiantes') }}">Estudiantes</a></li>
-        <li><a href="{{ url_for('listar_usuarios') }}">Usuarios</a></li>
-        <li><a href="{{ url_for('listar_cursos') }}">Cursos</a></li>
-        <li><a href="{{ url_for('listar_profesores') }}">Profesores</a></li>
-        <li><a href="{{ url_for('listar_tareas') }}">Tareas</a></li>
-        <li><a href="{{ url_for('listar_inscripciones') }}">Inscripciones</a></li>
-        <li><a href="{{ url_for('listar_comentarios') }}">Comentarios</a></li>
-        <li><a href="{{ url_for('listar_recursos') }}">Recursos</a></li>
-        <li><a href="{{ url_for('listar_horarios') }}">Horarios</a></li>
-        <li><a href="{{ url_for('listar_notificaciones') }}">Notificaciones</a></li>
-        <li><a href="{{ url_for('listar_roles') }}">Roles</a></li>
-        <li><a href="{{ url_for('listar_curso_profesores') }}">Curso-Profesores</a></li>
-    </ul>
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-chalkboard-teacher"></i> Profesores</h5>
+                    <p class="card-text">Administrar la información de los profesores.</p>
+                    <a href="{{ url_for('listar_profesores') }}" class="btn btn-primary">Ir a Profesores</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-tasks"></i> Tareas</h5>
+                    <p class="card-text">Administrar las tareas asignadas.</p>
+                    <a href="{{ url_for('listar_tareas') }}" class="btn btn-primary">Ir a Tareas</a>
+                </div>
+            </div>
+        </div>
+          <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-clipboard-list"></i> Inscripciones</h5>
+                    <p class="card-text">Administrar las inscripciones de los estudiantes.</p>
+                    <a href="{{ url_for('listar_inscripciones') }}" class="btn btn-primary">Ir a Inscripciones</a>
+                </div>
+            </div>
+        </div>
+    </div>
+     <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-comments"></i> Comentarios</h5>
+                    <p class="card-text">Administrar los comentarios de las tareas.</p>
+                    <a href="{{ url_for('listar_comentarios') }}" class="btn btn-primary">Ir a Comentarios</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-file"></i> Recursos</h5>
+                    <p class="card-text">Administrar los recursos de aprendizaje.</p>
+                    <a href="{{ url_for('listar_recursos') }}" class="btn btn-primary">Ir a Recursos</a>
+                </div>
+            </div>
+        </div>
+          <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-clock"></i> Horarios</h5>
+                    <p class="card-text">Administrar los horarios de clases.</p>
+                    <a href="{{ url_for('listar_horarios') }}" class="btn btn-primary">Ir a Horarios</a>
+                </div>
+            </div>
+        </div>
+    </div>
+     <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-bell"></i> Notificaciones</h5>
+                    <p class="card-text">Administrar las notificaciones a los estudiantes.</p>
+                    <a href="{{ url_for('listar_notificaciones') }}" class="btn btn-primary">Ir a Notificaciones</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-user-tag"></i> Roles</h5>
+                    <p class="card-text">Administrar los roles de los usuarios.</p>
+                    <a href="{{ url_for('listar_roles') }}" class="btn btn-primary">Ir a Roles</a>
+                </div>
+            </div>
+        </div>
+          <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-link"></i> Curso-Profesores</h5>
+                    <p class="card-text">Administrar la asignación de profesores a cursos.</p>
+                    <a href="{{ url_for('listar_curso_profesores') }}" class="btn btn-primary">Ir a Curso-Profesores</a>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
